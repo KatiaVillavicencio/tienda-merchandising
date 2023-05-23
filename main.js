@@ -50,7 +50,7 @@ function Producto(id, nombre, precio, stock, descuento) {
 
 function mostrarProducto() {
 
-    let seleccion = prompt("Escriba el numero del producto deseado: 1. Polera 2. Tomatodo 3. Taza 4. Gorra 5. Llavero");
+    let seleccion = prompt("Escriba el numero del producto deseado: 1.Polera // 2.Tomatodo // 3.Taza // 4.Gorra // 5.Llavero");
 
     let productoBusqueda = productos.find(i => i.id == seleccion);
 
@@ -98,7 +98,6 @@ function calcularTotal() {
 }
 
 
-
 /* 2do paso. Llamo a las funciones:
 1. Saludo
 2. Mostrar lista
@@ -107,7 +106,7 @@ function calcularTotal() {
 5. Agregar productos
 6. Consultar si desea agregar mas productos
 7. Filtrar producto por descuento
-8. Total
+8. Total (por consola)
 */
 
 let mensajeSaludo = saludo();
@@ -127,17 +126,12 @@ calcularTotal();
 
 
 
-//respuestas por consola funcion imprimir anuncio//
+//imprimir anuncio//
 
 /* console.log("S/.", producto1.imprimirAnuncio());
 console.log("S/.", producto2.imprimirAnuncio(),);
 console.log("S/.", producto3.imprimirAnuncio(),); */
 
-
-//agregar productos por ejem: agregarProducto(producto3) y luego revisar: console.log(productosElegidos)
-
-/* agregarProducto(producto3), agregarProducto(producto5)
-console.log("productos elegidos", productosElegidos) */
 
 
 
