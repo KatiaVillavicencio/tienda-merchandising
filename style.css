@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap");
+* {
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
+
+}
+
+h1 {font-family: "Rock Salt"; 
+    padding: 50px;
+  
+}
+
+li {
+    font-family: "Rock Salt"; 
+    font-size: 150%;
+    padding: 80px;
+    list-style: none;
+    
+}
