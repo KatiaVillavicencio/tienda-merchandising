@@ -1,4 +1,3 @@
-
 //tienda de merchandising//
 
 // 1er paso. Declaro funciones y constantes/variables globales, que se usaran para todas las funciones //
@@ -51,7 +50,7 @@ function verificarProductoElegido(productoSeleccionadoID) {
         console.log("Producto Nuevo agregado");
     }
     else {
-        console.log("Producto ya fue agregado");
+        alert("Producto ya fue agregado");
     }
 };
 
@@ -90,16 +89,20 @@ function renderizarProductos() {
 
 function calcularTotal() {
     const descuento = 0.20;
+    total = 0;
+    console.log(productosElegidos);
     for (let i = 0; i < productosElegidos.length; i++) {
         if (productosElegidos[i].descuento) {
             const precioConDescuentoFinal = productosElegidos[i].precio - (productosElegidos[i].precio * descuento);
+            console.log("precioConDescuentoFinal", precioConDescuentoFinal);
             total += precioConDescuentoFinal;
         } else {
             const precioSinDescuentoFinal = productosElegidos[i].precio;
+            console.log("precioSinDescuentoFinal", precioSinDescuentoFinal);
             total += precioSinDescuentoFinal;
         }
     }
-
+    console.log("total", total);
     localStorage.setItem("total", JSON.stringify(total));
     
     return total;
@@ -107,7 +110,7 @@ function calcularTotal() {
 
 function mostrarTotal() {
     const contenedorTotal = document.querySelector(".suma-total");
-    contenedorTotal.innerHTML = `El costo total es ${total}`;
+    contenedorTotal.innerHTML = `${total}`;
 }
 
 function agregarProducto(contenedorProducto) {
@@ -125,3 +128,14 @@ console.log("Mensaje de Saludo:", mensajeSaludo); */
 
 
 renderizarProductos();
+
+
+
+
+
+
+
+
+
+
+
