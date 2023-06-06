@@ -12,22 +12,6 @@ const productos = [
     new Producto(5, "landyard", 10, 100, true, "landyard.webp")
 ];
 
-//Funciones://
-
-function saludo() {
-    let nombrePersona = prompt("Por favor, ingrese su nombre:");
-    if (nombrePersona != null) {
-        const saludo = "¡Hola " + nombrePersona + " Bienvenid@ a nuestra tienda!";
-        alert(saludo);
-        return saludo;
-    }
-    else {
-        const saludo = "¡Hola, bienvenid@ a nuestra tienda!";
-        alert(saludo);
-        return saludo;
-    }
-};
-
 //funcion para los productos//
 
 function Producto(id, nombre, precio, stock, descuento, archivo) {
@@ -40,28 +24,34 @@ function Producto(id, nombre, precio, stock, descuento, archivo) {
 
 };
 
-// funcion para imprimir anuncio
-/*function imprimirAnuncio() {
-    console.log(`Aprovecha el 20% de descuento en tu ${this.nombre}, disponible ${this.stock} unidades`);
-    return this.precio;
-}*/
+// funcion para agregar productos
 
+let productosElegidos = [];
+const productosElegidosLocalStorage = JSON.parse(localStorage.getItem("productosElegidos"));
+if (productosElegidosLocalStorage) {
+    productosElegidosLocalStorage.map(objeto => productosElegidos.push((objeto)));
+    localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
+}
 
-//funcion para mostrar y elegir un producto x ID//
+let total = 0;
 
-function mostrarProducto() {
+const totalLocalStorage = JSON.parse(localStorage.getItem("total"));
+if (totalLocalStorage) {
+    localStorage.setItem("total", JSON.stringify(total));
+}
 
-    let seleccion = prompt("Escriba el numero del producto deseado: 1.Polera // 2.Tomatodo // 3.Taza // 4.Gorra // 5.Llavero");
+function verificarProductoElegido(productoSeleccionadoID) {
 
-    let productoBusqueda = productos.find(i => i.id == seleccion);
+    const productoBusqueda = productosElegidos.find(i => i.id == productoSeleccionadoID);
 
-    if (productoBusqueda) {
-        console.log("Producto si existe", productoBusqueda);
-        agregarProducto(productoBusqueda);
-
-    } else {
-        console.log("Producto no existe");
-        alert("Producto no existe");
+    if (productoBusqueda == undefined) {
+        const producto = productos.find(i => i.id == productoSeleccionadoID);
+        productosElegidos.push(producto);
+        localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
+        console.log("Producto Nuevo agregado");
+    }
+    else {
+        console.log("Producto ya fue agregado");
     }
 };
 
@@ -86,7 +76,7 @@ function renderizarProductos() {
     productos.forEach((producto) => {
         const container = document.createElement('div');
         container.classList.add("product-card")
-        container.dataset.id = `${producto.id}`; 
+        container.id = `${producto.id}`;
         container.innerHTML = plantillaDeProductos(producto);
         contenedorListaProductos.appendChild(container);
     })
@@ -96,103 +86,42 @@ function renderizarProductos() {
     listaProductos.forEach(producto => producto.addEventListener('click', (e) => agregarProducto(e.currentTarget)));
 }
 
-// funcion para agregar productos
-let productosElegidos = [];
-function agregarProducto(contenedorProducto) {
-    const productoId = parseInt(contenedorProducto.dataset.id);
-
-    let productoBusqueda = productos.find(i => i.id = parseInt(productoId));
-
-   /*  if (productoBusqueda) {
-        console.log("Producto si existe", productoBusqueda);
-        agregarProducto(productoBusqueda);
-
-    } else {
-        console.log("Producto no existe");
-        alert("Producto no existe");
-    } */
-
-    productosElegidos.push(productoBusqueda);
-
-    console.log(productosElegidos);
-}
-// funcion para preguntar por mas productos
-function masProductos() {
-    const confirmar = confirm("Desea agregar mas productos?");
-    return confirmar;
-}
-
 // funcion para sumar el total incluyendo el 20% de dscto. en los productos indicados //
 
 function calcularTotal() {
-    let total = 0;
     const descuento = 0.20;
-
     for (let i = 0; i < productosElegidos.length; i++) {
         if (productosElegidos[i].descuento) {
             const precioConDescuentoFinal = productosElegidos[i].precio - (productosElegidos[i].precio * descuento);
             total += precioConDescuentoFinal;
         } else {
             const precioSinDescuentoFinal = productosElegidos[i].precio;
-            console.log(precioSinDescuentoFinal, "Precio con descuento final")
             total += precioSinDescuentoFinal;
         }
     }
 
-    total = console.log(`Gracias por su compra, precio total con dscto.: S/. ${total} soles`);
+    localStorage.setItem("total", JSON.stringify(total));
+    
     return total;
 }
 
+function mostrarTotal() {
+    const contenedorTotal = document.querySelector(".suma-total");
+    contenedorTotal.innerHTML = `El costo total es ${total}`;
+}
 
-/* 2do paso. Llamo a las funciones:
-1. Saludo
-2. Mostrar lista
-3. Elegir productos x ID
-4. Comprobar existencia del producto
-5. Agregar productos
-6. Consultar si desea agregar mas productos
-7. Filtrar producto por descuento
-8. Total (por consola)
-*/
+function agregarProducto(contenedorProducto) {
+    const productoId = parseInt(contenedorProducto.id);
+    
+    verificarProductoElegido(productoId);
+    calcularTotal();
+    mostrarTotal();
+}
+
+/* 2do paso. Llamo a las funciones para que se ejecuten*/
 
 /* let mensajeSaludo = saludo();
 console.log("Mensaje de Saludo:", mensajeSaludo); */
 
-/* mostrarProducto(); */
-
-/* while (masProductos()) {
-    mostrarProducto();
-};
- */
-
-/* console.log(productosElegidos);
-
-calcularTotal(); */
-
-
-
-
-//imprimir anuncio//
-
-/* console.log("S/.", producto1.imprimirAnuncio());
-console.log("S/.", producto2.imprimirAnuncio(),);
-console.log("S/.", producto3.imprimirAnuncio(),); */
-
-
-
-
 
 renderizarProductos();
-
-
-
-
-
-
-
-
-
-
-
-
-
