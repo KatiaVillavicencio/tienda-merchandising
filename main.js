@@ -61,7 +61,10 @@ function plantillaDeProductos(producto) {
                 <div class="card" style="width: 18rem;">
                     <img src="./Img/${producto.archivo}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <span class="card-text">Precio: ${producto.precio}</p>
+                        <span class="card-text"> Precio:S/. ${producto.precio}</p>
+                        <p> Stock: ${producto.stock} unidades </p>
+                        <p> Descuento: ${producto.descuento} </p>
+                        <button> Agregar al carrito </button>
                     </div>
                 </div>
             </div>
