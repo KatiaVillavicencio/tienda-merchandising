@@ -1,0 +1,8 @@
+[
+    {"id":1, "nombre":"polera", "precio":120, "stock":10, "descuento":true, "archivo":"polera.webp"},
+    {"id":2, "nombre":"tomatodo", "precio":40, "stock":30, "descuento":false, "archivo":"tomatodo.webp"},
+    {"id":3, "nombre":"taza", "precio":80, "stock":15, "descuento":true, "archivo":"taza.webp"},
+    {"id":4, "nombre":"gorra", "precio":50, "stock":20, "descuento":false, "archivo":"gorra.webp"},
+    {"id":5, "nombre":"landyard", "precio":10, "stock":100, "descuento":true, "archivo":"landyard.webp"},
+
+]
