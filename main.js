@@ -50,7 +50,15 @@ function verificarProductoElegido(productoSeleccionadoID) {
         console.log("Producto Nuevo agregado");
     }
     else {
-        alert("Producto ya fue agregado");
+
+    //libreria sweet alert//
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Producto agregado',
+            showConfirmButton: false,
+            timer: 1500
+          })
     }
 };
 
