@@ -11,7 +11,7 @@ h1 {font-family: "Rock Salt";
   
 }
 
-li {
+.card-title {
     font-family: "Rock Salt"; 
     font-size: 150%;
     padding: 80px;

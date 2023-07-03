@@ -1,34 +1,23 @@
 //tienda de merchandising//
 
 // 1er paso. Declaro funciones y constantes/variables globales, que se usaran para todas las funciones //
+
 // Constantes globales - Array de Productos
 
-const productos = [
-    new Producto(1, "polera", 120, 10, true, "polera.webp"),
-    new Producto(2, "tomatodo", 80, 15, false, "tomatodo.webp"),
-    new Producto(3, "taza", 40, 30, true, "taza.webp"),
-    new Producto(4, "gorra", 50, 20, false, "gorra.webp"),
-    new Producto(5, "landyard", 10, 100, true, "landyard.webp")
-];
-
-//funcion para los productos//
-
-function Producto(id, nombre, precio, stock, descuento, archivo) {
-    this.id = id
-    this.nombre = nombre
-    this.precio = precio
-    this.stock = stock
-    this.descuento = descuento
-    this.archivo = archivo
-
-};
-
-// funcion para agregar productos
-
+let productos = [];
 let productosElegidos = [];
+
 const productosElegidosLocalStorage = JSON.parse(localStorage.getItem("productosElegidos"));
+
 if (productosElegidosLocalStorage) {
     productosElegidosLocalStorage.map(objeto => productosElegidos.push((objeto)));
+
+    // Eliminamos productos repetidos del Carrito
+    const productosOrdenados = productosElegidos.filter((item, index) => {
+        return productosElegidos.indexOf(item) === index;
+    })
+    //Agregamos productos sin repetir al Carrito
+    productosElegidos = productosOrdenados;
     localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
 }
 
@@ -36,58 +25,79 @@ let total = 0;
 
 const totalLocalStorage = JSON.parse(localStorage.getItem("total"));
 if (totalLocalStorage) {
+    total = totalLocalStorage;
     localStorage.setItem("total", JSON.stringify(total));
 }
 
 function verificarProductoElegido(productoSeleccionadoID) {
 
-    const productoBusqueda = productosElegidos.find(i => i.id == productoSeleccionadoID);
 
-    if (productoBusqueda == undefined) {
-        const producto = productos.find(i => i.id == productoSeleccionadoID);
-        productosElegidos.push(producto);
-        localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
-        console.log("Producto Nuevo agregado");
+    /* buscar el ID selccionado en productos elegidos */
+    const productoExistente = productosElegidos.find(i => i.id == productoSeleccionadoID);
+    const contenedorStock = document.querySelector(`[id='${productoSeleccionadoID}'] .card-stock`);
+    // El producto elegido ya existe
+    if (productoExistente) {
+        productoExistente.cantidad++;
+        productoExistente.stock--;
+        contenedorStock.innerHTML = `${productoExistente.stock}`;
+    } else {
+        // El producto elegido no existe
+
+        const productoNuevo = productos.find(i => i.id == productoSeleccionadoID);
+        productoNuevo.cantidad++;
+        productoNuevo.stock--;
+        contenedorStock.innerHTML = `${productoNuevo.stock}`;
+        productosElegidos.push(productoNuevo);
     }
-    else {
 
+    localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
     //libreria sweet alert//
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Producto agregado',
-            showConfirmButton: false,
-            timer: 1500
-          })
-    }
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Producto agregado',
+        showConfirmButton: false,
+        timer: 1500
+    })
+
 };
 
 function plantillaDeProductos(producto) {
     return `
-            <div class="col">
-                <li>${producto.nombre}</li>
-                <div class="card" style="width: 18rem;">
+            
+                <span class="card-title">${producto.nombre}</span>
+                <div class="card  text-center" style="width: 18rem;">
                     <img src="./Img/${producto.archivo}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <span class="card-text"> Precio:S/. ${producto.precio}</p>
-                        <p> Stock: ${producto.stock} unidades </p>
-                        <p> Descuento: ${producto.descuento} </p>
+                        <span class="card-text"> Precio:S/. ${producto.precio}</span><br>
+                        <span> Stock: <span class="card-stock">${producto.stock} </span >unidades </span> <br>
+                        <span> ${producto.descuento ? "Descuento 20%" : "Precio normal"} </span> <br>
                         <button> Agregar al carrito </button>
                     </div>
                 </div>
-            </div>
             `;
 }
 
+async function llamarProductos() {
+    const respuesta = await fetch('./json/productos.json');
+    const data = await respuesta.json();
+    data.forEach(producto => { productos.push(producto) });
+    return productos;
+}
+
+
 function renderizarProductos() {
-    const contenedorListaProductos = document.querySelector(".lista-productos");
+    const contenedorListaProductos = document.querySelector(".lista-productos .row");
 
     // Con la plantilla de productos, creamos un elemento por cada producto de la lista de objetos con el id de producto
     productos.forEach((producto) => {
         const container = document.createElement('div');
-        container.classList.add("product-card")
-        container.id = `${producto.id}`;
-        container.innerHTML = plantillaDeProductos(producto);
+        container.classList.add("col");
+        const card = document.createElement('div');
+        card.classList.add("product-card");
+        card.id = `${producto.id}`;
+        card.innerHTML = plantillaDeProductos(producto);
+        container.appendChild(card);
         contenedorListaProductos.appendChild(container);
     })
 
@@ -101,32 +111,34 @@ function renderizarProductos() {
 function calcularTotal() {
     const descuento = 0.20;
     total = 0;
-    console.log(productosElegidos);
     for (let i = 0; i < productosElegidos.length; i++) {
         if (productosElegidos[i].descuento) {
-            const precioConDescuentoFinal = productosElegidos[i].precio - (productosElegidos[i].precio * descuento);
-            console.log("precioConDescuentoFinal", precioConDescuentoFinal);
+            // Se multiplica el precio individual por la cantidad de productos seleccionados
+            console.log(productosElegidos[i]);
+            const precioConDescuentoFinal = (productosElegidos[i].precio - (productosElegidos[i].precio * descuento)) * productosElegidos[i].cantidad;
             total += precioConDescuentoFinal;
         } else {
-            const precioSinDescuentoFinal = productosElegidos[i].precio;
-            console.log("precioSinDescuentoFinal", precioSinDescuentoFinal);
+            const precioSinDescuentoFinal = (productosElegidos[i].precio) * productosElegidos[i].cantidad;
             total += precioSinDescuentoFinal;
         }
     }
-    console.log("total", total);
     localStorage.setItem("total", JSON.stringify(total));
-    
     return total;
 }
 
 function mostrarTotal() {
-    const contenedorTotal = document.querySelector(".suma-total");
+    const contenedorCarrito = document.querySelector("#producto-carrito");
+    const productosOrdenados = [...new Set(productosElegidos)];
+    const nombresProductosElegidos = productosOrdenados.map(producto => producto.nombre);
+    contenedorCarrito.innerHTML = `${nombresProductosElegidos}`;
+
+    const contenedorTotal = document.querySelector("#suma-total");
     contenedorTotal.innerHTML = `${total}`;
 }
 
 function agregarProducto(contenedorProducto) {
     const productoId = parseInt(contenedorProducto.id);
-    
+
     verificarProductoElegido(productoId);
     calcularTotal();
     mostrarTotal();
@@ -134,14 +146,9 @@ function agregarProducto(contenedorProducto) {
 
 /* 2do paso. Llamo a las funciones para que se ejecuten*/
 
-/* let mensajeSaludo = saludo();
-console.log("Mensaje de Saludo:", mensajeSaludo); */
-
-
-renderizarProductos();
-
-
-
+llamarProductos();
+setTimeout(() => renderizarProductos(), 700);
+mostrarTotal();
 
 
 
