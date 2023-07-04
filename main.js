@@ -57,10 +57,15 @@ function verificarProductoElegido(productoSeleccionadoID) {
         icon: 'success',
         title: 'Producto agregado',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1000
     })
 
+     // Imprimir el número de productos seleccionados //
+     const numeroProductosSeleccionados = productosElegidos.reduce((total, producto) => total + producto.cantidad, 0);
+     console.log("Número de productos seleccionados:", numeroProductosSeleccionados);
+
 };
+numeroProductosSeleccionados = document.querySelector("#producto-carrito");
 
 function plantillaDeProductos(producto) {
     return `
@@ -131,6 +136,11 @@ function mostrarTotal() {
     const productosOrdenados = [...new Set(productosElegidos)];
     const nombresProductosElegidos = productosOrdenados.map(producto => producto.nombre);
     contenedorCarrito.innerHTML = `${nombresProductosElegidos}`;
+    
+    const numeroProductos = productosElegidos.length;
+    const contenedorNumeroProductos = document.querySelector("#numero-productos");
+    contenedorNumeroProductos.innerHTML = numeroProductos;
+
 
     const contenedorTotal = document.querySelector("#suma-total");
     contenedorTotal.innerHTML = `${total}`;
