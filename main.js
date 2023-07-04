@@ -149,3 +149,6 @@ function agregarProducto(contenedorProducto) {
 llamarProductos();
 setTimeout(() => renderizarProductos(), 700);
 mostrarTotal();
+
+
+
