@@ -70,7 +70,7 @@ function plantillaDeProductos(producto) {
                     <img src="./Img/${producto.archivo}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <span class="card-text"> Precio:S/. ${producto.precio}</span><br>
-                        <span> Stock: <span class="card-stock">${producto.stock} </span >unidades </span> <br>
+                        <span> Stock: <span class="card-stock">${producto.stock} </span > unidades </span> <br>
                         <span> ${producto.descuento ? "Descuento 20%" : "Precio normal"} </span> <br>
                         <button> Agregar al carrito </button>
                     </div>
