@@ -132,18 +132,25 @@ function calcularTotal() {
 }
 
 function mostrarTotal() {
-    const contenedorCarrito = document.querySelector("#producto-carrito");
-    const productosOrdenados = [...new Set(productosElegidos)];
-    const nombresProductosElegidos = productosOrdenados.map(producto => producto.nombre);
-    contenedorCarrito.innerHTML = `${nombresProductosElegidos}`;
-    
-    const numeroProductos = productosElegidos.length;
+    const contenedorProductosSeleccionados = document.querySelector("#productos-seleccionados");
+    contenedorProductosSeleccionados.innerHTML = ""; // Limpiar contenido anterior
+
+    productosElegidos.forEach((producto) => {
+        const productoSeleccionado = document.createElement("div");
+        productoSeleccionado.innerHTML = `
+            <span>${producto.nombre}</span>
+            <span>Cantidad: ${producto.cantidad}</span>
+        `;
+        contenedorProductosSeleccionados.appendChild(productoSeleccionado);
+    });
+
+    const numeroProductos = productosElegidos.reduce((total, producto) => total + producto.cantidad, 0);
     const contenedorNumeroProductos = document.querySelector("#numero-productos");
     contenedorNumeroProductos.innerHTML = numeroProductos;
 
-
     const contenedorTotal = document.querySelector("#suma-total");
-    contenedorTotal.innerHTML = `${total}`;
+    contenedorTotal.innerHTML = total;
+
 }
 
 function agregarProducto(contenedorProducto) {
