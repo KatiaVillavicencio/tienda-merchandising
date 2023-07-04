@@ -51,14 +51,29 @@ function verificarProductoElegido(productoSeleccionadoID) {
     }
 
     localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
-    //libreria sweet alert//
-    Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'Producto agregado',
-        showConfirmButton: false,
-        timer: 1000
-    })
+    
+    if (contenedorStock.innerHTML < 1) 
+
+    {
+       Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: '¡Ya se agotó este producto!',
+            showConfirmButton: false,
+            timer: 1000
+        });  
+    } 
+
+    else {
+       
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Producto agregado',
+            showConfirmButton: false,
+            timer: 1000
+        });
+    }
 
      // Imprimir el número de productos seleccionados //
      const numeroProductosSeleccionados = productosElegidos.reduce((total, producto) => total + producto.cantidad, 0);
@@ -166,6 +181,7 @@ function agregarProducto(contenedorProducto) {
 llamarProductos();
 setTimeout(() => renderizarProductos(), 700);
 mostrarTotal();
+
 
 
 
