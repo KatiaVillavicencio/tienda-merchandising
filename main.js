@@ -30,61 +30,44 @@ if (totalLocalStorage) {
 }
 
 function verificarProductoElegido(productoSeleccionadoID) {
-    /* buscar el ID seleccionado en productos elegidos */
-    const productoExistente = productosElegidos.find(i => i.id == productoSeleccionadoID);
     const contenedorStock = document.querySelector(`[id='${productoSeleccionadoID}'] .card-stock`);
-    
-    if (contenedorStock.innerHTML <= 0) {
-        Swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '¡Ya se agotó este producto!',
-            showConfirmButton: false,
-            timer: 1000
-        });
-        return;
-    }
-
-    // El producto elegido ya existe
-    if (productoExistente) {
-        productoExistente.cantidad++;
-        productoExistente.stock--;
-        contenedorStock.innerHTML = `${productoExistente.stock}`;
-    } else {
-        // El producto elegido no existe
-        const productoNuevo = productos.find(i => i.id == productoSeleccionadoID);
-        
-        if (productoNuevo.stock <= 0) {
-            Swal.fire({
-                position: 'center',
-                icon: 'warning',
-                title: '¡Ya se agotó este producto!',
-                showConfirmButton: false,
-                timer: 1000
-            });
-            return;
-        }
-        
-        productoNuevo.cantidad++;
-        productoNuevo.stock--;
-        contenedorStock.innerHTML = `${productoNuevo.stock}`;
-        productosElegidos.push(productoNuevo);
-    }
-
-    localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
-    
-    Swal.fire({
+    const productoExistente = productosElegidos.find(i => i.id == productoSeleccionadoID);
+  
+    if (contenedorStock.innerHTML <= 0 || (productoExistente && productoExistente.stock <= 0)) {
+      Swal.fire({
         position: 'center',
-        icon: 'success',
-        title: 'Producto agregado',
+        icon: 'warning',
+        title: '¡Ya se agotó este producto!',
         showConfirmButton: false,
         timer: 1000
+      });
+      return;
+    }
+  
+    const producto = productoExistente || productos.find(i => i.id == productoSeleccionadoID);
+  
+    producto.cantidad++;
+    producto.stock--;
+    contenedorStock.innerHTML = `${producto.stock}`;
+  
+    if (!productoExistente) {
+      productosElegidos.push(producto);
+    }
+  
+    localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
+  
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Producto agregado',
+      showConfirmButton: false,
+      timer: 1000
     });
-
-    // Imprimir el número de productos seleccionados
+  
     const numeroProductosSeleccionados = productosElegidos.reduce((total, producto) => total + producto.cantidad, 0);
     console.log("Número de productos seleccionados:", numeroProductosSeleccionados);
-}
+  }
+  
 
 numeroProductosSeleccionados = document.querySelector("#producto-carrito");
 
@@ -189,8 +172,3 @@ function agregarProducto(contenedorProducto) {
 llamarProductos();
 setTimeout(() => renderizarProductos(), 700);
 mostrarTotal();
-
-
-
-
-
