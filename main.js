@@ -32,45 +32,44 @@ if (totalLocalStorage) {
 function verificarProductoElegido(productoSeleccionadoID) {
     const contenedorStock = document.querySelector(`[id='${productoSeleccionadoID}'] .card-stock`);
     const productoExistente = productosElegidos.find(i => i.id == productoSeleccionadoID);
-  
+
     if (contenedorStock.innerHTML <= 0 || (productoExistente && productoExistente.stock <= 0)) {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        title: '¡Ya se agotó este producto!',
-        showConfirmButton: false,
-        timer: 1000
-      });
-      return;
+        Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: '¡Ya se agotó este producto!',
+            showConfirmButton: false,
+            timer: 1000
+        });
+        return;
     }
-  
+
     const producto = productoExistente || productos.find(i => i.id == productoSeleccionadoID);
-  
+
     producto.cantidad++;
     producto.stock--;
     contenedorStock.innerHTML = `${producto.stock}`;
-  
+
     if (!productoExistente) {
-      productosElegidos.push(producto);
+        productosElegidos.push(producto);
     }
-  
+
     localStorage.setItem("productosElegidos", JSON.stringify(productosElegidos));
-  
+
     Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Producto agregado',
-      showConfirmButton: false,
-      timer: 1000
+        position: 'center',
+        icon: 'success',
+        title: 'Producto agregado',
+        showConfirmButton: false,
+        timer: 1000
     });
-  
-    const numeroProductosSeleccionados = productosElegidos.reduce((total, producto) => total + producto.cantidad, 0);
+
+    const numeroProductosSeleccionados = productosElegidos.reduce((total, producto,) => total + producto.cantidad, 0);
     console.log("Número de productos seleccionados:", numeroProductosSeleccionados);
-  }
-  
+}
+
 
 numeroProductosSeleccionados = document.querySelector("#producto-carrito");
-
 
 
 function plantillaDeProductos(producto) {
@@ -81,7 +80,7 @@ function plantillaDeProductos(producto) {
                     <img src="./Img/${producto.archivo}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <span class="card-text"> Precio:S/. ${producto.precio}</span><br>
-                        <span> Stock: <span class="card-stock">${producto.stock} </span > unidades </span> <br>
+                        <span> Stock: <span class="card-stock"> ${producto.stock} </span > unidades </span> <br>
                         <span> ${producto.descuento ? "Descuento 20%" : "Precio normal"} </span> <br>
                         <button> Agregar al carrito </button>
                     </div>
