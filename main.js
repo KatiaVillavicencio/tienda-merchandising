@@ -91,9 +91,16 @@ function plantillaDeProductos(producto) {
 async function llamarProductos() {
     const respuesta = await fetch('./json/productos.json');
     const data = await respuesta.json();
-    data.forEach(producto => { productos.push(producto) });
+    data.forEach(producto => {
+      // Verificar si el producto está en el carrito y actualizar el stock
+      const productoExistente = productosElegidos.find(i => i.id === producto.id);
+      if (productoExistente) {
+        producto.stock = productoExistente.stock;
+      }
+      productos.push(producto);
+    });
     return productos;
-}
+  }
 
 
 function renderizarProductos() {
